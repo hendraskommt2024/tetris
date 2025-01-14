@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Add this in the head section -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Tetris Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -20,7 +24,7 @@
       /* Update the game-container styles */
       .game-container {
         max-width: 100%;
-        height: 100vh;
+        height: 90vh;
         margin: 0 auto;
         padding: 20px;
         background-color: #444;
@@ -54,6 +58,34 @@
         background-color: #fff;
       }
     </style>
+    <style>
+      /* Add this to your existing style section */
+      .mobile-controls {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .mobile-controls {
+          display: flex;
+        }
+
+        .game-board {
+          height: calc(100vh - 200px); /* Adjust for mobile controls */
+        }
+
+        .control-btn {
+          width: 60px;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          color: white;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="game-container">
@@ -75,6 +107,26 @@
         </div>
       </div>
       <div class="game-board" id="game-board"></div>
+      <!-- Add this after the game-board div -->
+      <div
+        class="mobile-controls fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-center gap-4"
+      >
+        <button class="control-btn bg-blue-500 p-4 rounded-full" id="left-btn">
+          ←
+        </button>
+        <button class="control-btn bg-blue-500 p-4 rounded-full" id="down-btn">
+          ↓
+        </button>
+        <button
+          class="control-btn bg-blue-500 p-4 rounded-full"
+          id="rotate-btn"
+        >
+          ↻
+        </button>
+        <button class="control-btn bg-blue-500 p-4 rounded-full" id="right-btn">
+          →
+        </button>
+      </div>
     </div>
 
     <script>
@@ -481,6 +533,46 @@
 
       // Add event listener for key presses
       document.addEventListener("keydown", handleKeyPress);
+
+      // Add this before the existing event listeners
+      function initMobileControls() {
+        document
+          .getElementById("left-btn")
+          .addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            if (canMoveLeft()) {
+              currentState.currentPiece.x--;
+              drawBoard();
+            }
+          });
+
+        document
+          .getElementById("right-btn")
+          .addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            if (canMoveRight()) {
+              currentState.currentPiece.x++;
+              drawBoard();
+            }
+          });
+
+        document
+          .getElementById("down-btn")
+          .addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            moveDown();
+          });
+
+        document
+          .getElementById("rotate-btn")
+          .addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            rotatePiece();
+          });
+      }
+
+      // Add this line after your existing event listeners
+      initMobileControls();
     </script>
   </body>
 </html>
